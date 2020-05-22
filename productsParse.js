@@ -1,6 +1,5 @@
 const axios = require('axios')
 const $ = require('cheerio')
-const puppeteer = require('puppeteer')
 
 const home = 'https://www.baldorfood.com/'
 const url = 'products/fruits'

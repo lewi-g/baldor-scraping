@@ -10,8 +10,6 @@ const axiosConfig = {
   },
 }
 
-const url = axiosConfig.url
-
 //https://www.baldorfood.com/products/vegetables/tomatoes?viewall=1
 
 const fetchProductClasses = async () => {

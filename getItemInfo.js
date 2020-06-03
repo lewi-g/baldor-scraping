@@ -1,38 +1,29 @@
+require('dotenv').config()
 const axios = require('axios')
-const cheerio = require('cheerio')
-const url = 'https://www.baldorfood.com/products/fruits/apples?viewall=1'
+const $ = require('cheerio')
+const axiosConfig = require('./axiosConfig')
 
-const axiosConfig = {
-  headers: {
-    Cookie:
-      'PHPSESSID=kll1ru40pihvdm6087c79qd1un; SESSION=34s8l8c9lsj71toddcc9q56338',
-  },
-}
+const items = new Set()
 
-const getItemInformation = async () => {
+const getItemInformation = async (subsection) => {
+  const url = `https://www.baldorfood.com${subsection.name}?viewall=1`
   const res = await axios.get(url, axiosConfig)
-  const $ = cheerio.load(res.data)
 
-  $('.product-title-and-sku').each((i, product) => {
-    console.log($(product).find('[unbxdattr="product"]'))
+  $('.product-title-and-sku', res.data).each((i, item) => {
+    const itemName = $(item).find('a').text()
+    const fullPrice = $(item).find('span.price').text()
+    const unit = $(item).find('span.price-unit').text()
+    const sku = $(item).find('span.product-sku-inline').text()
+
+    items.add({
+      sku,
+      itemName,
+      fullPrice,
+      unit,
+    })
   })
 
-  // console.log($('div.flipper').length)
-  // console.log($('.js-product-price').first().children())
-  // console.log($('.prod-nb-line-sku').length)
-  // console.log($('.card-product-title').first().children().first())
-  // $('.card-product-title').each((i, item) =>
-  //   console.log(i, $(item.children('a')))
-  // )
-  // console.log($('.card-product-title', res.data).first().text())
-  console.log($('span.price', res.data).length)
-  // console.log($('span.price', res.data).first().contents())
-  // console.log($('.sign-in-user-widget', res.data).html()) // sign in to order is there
-
-  // console.log($('.js_product_card', res.data).html())
-  // $('.js_product_card .pct-heading h3', res.data).each((i, item) => {
-  //   console.log($(item).text())
-  // })
+  console.log(subsection.name, items.size)
 }
 
-getItemInformation()
+module.exports = getItemInformation

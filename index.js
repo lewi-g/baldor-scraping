@@ -4,7 +4,9 @@ const $ = require('cheerio')
 const axiosConfig = require('./axiosConfig')
 const parseSubsections = require('./parseSubsections')
 
-const parseSections = async (home) => {
+const allItems = new Set()
+
+const parseSections = async (allItems) => {
   const url = 'https://www.baldorfood.com'
   const products = {}
   const res = await axios.get(url, axiosConfig)
@@ -12,8 +14,8 @@ const parseSections = async (home) => {
   $('a.menu-fi-item', res.data).each((i, item) => {
     const sectionURL = item.attribs.href
     products[sectionURL] = sectionURL
-    parseSubsections(products, sectionURL)
+    parseSubsections(allItems, products, sectionURL)
   })
 }
 
-parseSections()
+parseSections(allItems)

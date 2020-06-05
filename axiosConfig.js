@@ -1,6 +1,6 @@
 const axiosConfig = {
   headers: {
-    Cookie: `SESSION = ${process.env.SESSION}`,
+    Cookie: `SESSION=${process.env.SESSION}`,
   },
 }
 
